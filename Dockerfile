@@ -1,6 +1,8 @@
 FROM oven/bun
 
-COPY . ./
+WORKDIR /build
+
+COPY . ./build
 
 RUN bun install
 RUN bun run build
@@ -15,4 +17,4 @@ ENV NODE_ENV=production
 ENV PORT 3000
 ENV HOSTNAME localhost
 EXPOSE 3000
-RUN bun run start
+CMD ["bun", "src/index.ts"]
