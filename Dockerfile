@@ -11,6 +11,7 @@ FROM deps as build
 COPY bun.lockb package.json tailwind.config.ts ./
 COPY public/ ./public/
 COPY src/ ./src/
+COPY app/ ./app/
 RUN bun install
 RUN bun run build
 
@@ -25,6 +26,7 @@ USER elysiajs
 COPY --from=deps /app/node_modules/ ./node_modules/
 COPY --from=build /app/public/ ./public/
 COPY src/ ./src/
+COPY app/ ./app/
 COPY package.json tailwind.config.ts tsconfig.json ./
 # Set environment variables
 ENV NODE_ENV=production
