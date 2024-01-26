@@ -2,7 +2,7 @@ FROM oven/bun AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-WORKDIR /app
+WORKDIR /build
 COPY bun.lockb package.json ./
 RUN bun install --ci
 
@@ -17,17 +17,20 @@ RUN bun run build
 
 # Development image, copy all the files and run the server
 FROM base AS run
-WORKDIR /app
+WORKDIR /build
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 bunjs
 RUN adduser --system --uid 1001 elysiajs
 USER elysiajs
+
 # Copy files
-COPY --from=deps /app/node_modules/ ./node_modules/
-COPY --from=build /app/public/ ./public/
+COPY --from=deps /build/node_modules/ ./node_modules/
+COPY --from=build /build/public/ ./public/
 COPY src/ ./src/
 COPY app/ ./app/
 COPY package.json tailwind.config.ts tsconfig.json ./
+
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT 3000
