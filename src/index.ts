@@ -1,7 +1,8 @@
-import { Elysia } from "elysia";
+import staticPlugin from "@elysiajs/static";
+import { app } from "../app";
+import { createElysia } from "./util/elysia";
+import { ip } from "elysia-ip";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const server = createElysia().use(ip()).use(staticPlugin()).use(app);
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+server.listen(3000);
